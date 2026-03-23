@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}About — NeuroScan AI{% endblock %}
+
+{% block content %}
+<section class="about-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="row mb-5 animate-in">
+      <div class="col-lg-7">
+        <div class="section-label">About the Model</div>
+        <h1 style="font-size:2.4rem; margin-bottom:1rem;">
+          Architecture &amp; <span style="color:var(--accent-cyan);">Results</span>
+        </h1>
+        <p class="text-secondary" style="font-size:1rem; line-height:1.8;">
+          NeuroScan AI uses a compact CNN trained on 3,000 real brain MRI images.
+          Despite having only <strong style="color:var(--text-primary);">11,137 parameters</strong>,
+          it achieves <strong style="color:var(--accent-cyan);">95.33% test accuracy</strong>
+          thanks to OpenCV-based brain contour preprocessing that removes distracting black borders
+          before each image enters the network.
+        </p>
+      </div>
+    </div>
+
+    <!-- Exact architecture from notebook -->
+    <div class="row mb-5 g-4">
+      <div class="col-12 animate-in delay-1">
+        <div class="section-label">Exact Architecture (from Kaggle Notebook)</div>
+        <h2 class="section-title mb-3">CNN Layer Summary</h2>
+      </div>
+
+      <div class="col-12 animate-in delay-2">
+        <div style="background:var(--bg-card); border:1px solid var(--border-card); border-radius:var(--radius-lg); overflow:hidden;">
+          <!-- Table header -->
+          <div style="display:grid; grid-template-columns:1fr 1.5fr 1fr; padding:0.75rem 1.5rem; background:rgba(0,212,255,0.06); border-bottom:1px solid var(--border-card); font-family:'Syne',sans-serif; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent-cyan);">
+            <div>Layer (type)</div>
+            <div>Output Shape</div>
+            <div>Param #</div>
+          </div>
+          {% set layers = [
+            ('input_1 (InputLayer)',         '(None, 240, 240, 3)', '0'),
+            ('zero_padding2d (ZeroPadding2D)','(None, 244, 244, 3)', '0'),
+            ('conv2d (Conv2D, 7×7, 32 filt.)','(None, 238, 238, 32)','4,736'),
+            ('bn0 (BatchNormalization)',      '(None, 238, 238, 32)','128'),
+            ('activation (ReLU)',             '(None, 238, 238, 32)','0'),
+            ('max_pooling2d (4×4)',           '(None, 59, 59, 32)',  '0'),
+            ('max_pooling2d_1 (4×4)',         '(None, 14, 14, 32)',  '0'),
+            ('flatten (Flatten)',             '(None, 6272)',        '0'),
+            ('dense (Dense, sigmoid)',        '(None, 1)',           '6,273'),
+          ] %}
+          {% for name, shape, params in layers %}
+          <div style="display:grid; grid-template-columns:1fr 1.5fr 1fr; padding:0.7rem 1.5rem; border-bottom:1px solid rgba(0,212,255,0.05); font-size:0.85rem; {% if loop.last %}border-bottom:none; background:rgba(0,212,255,0.04);{% endif %}">
+            <div style="color:var(--text-primary); font-family:'DM Mono','Courier New',monospace;">{{ name }}</div>
+            <div style="color:var(--accent-cyan); font-family:'DM Mono','Courier New',monospace;">{{ shape }}</div>
+            <div style="color:var(--text-secondary);">{{ params }}</div>
+          </div>
+          {% endfor %}
+          <div style="padding:0.7rem 1.5rem; background:rgba(0,212,255,0.06); display:grid; grid-template-columns:1fr 1.5fr 1fr; border-top:1px solid var(--border-card);">
+            <div style="font-family:'Syne',sans-serif; font-size:0.8rem; font-weight:700; color:var(--text-primary);">TOTAL</div>
+            <div></div>
+            <div style="font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; color:var(--accent-cyan);">11,137</div>
+          </div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.75rem;">
+          Trainable params: 11,073 · Non-trainable (BN): 64
+        </p>
+      </div>
+    </div>
+
+    <!-- Preprocessing Pipeline -->
+    <div class="row mb-5 g-4">
+      <div class="col-lg-6 animate-in delay-1">
+        <div class="section-label">Preprocessing (crop_brain_contour)</div>
+        <h3 class="mb-3">OpenCV Brain Isolation</h3>
+        <p class="text-secondary" style="font-size:0.9rem; margin-bottom:1.5rem;">
+          The most impactful part of this pipeline is <code>crop_brain_contour()</code> —
+          a function that uses OpenCV to detect and crop the brain region before resizing.
+          This removes irrelevant black borders that would otherwise confuse the model.
+        </p>
+
+        {% for title, desc in [
+          ('Grayscale + GaussianBlur(5,5)', 'Convert to single-channel and smooth to reduce noise before thresholding.'),
+          ('Binary Threshold (value=45)', 'Pixels above 45 → white, below → black. Separates brain tissue from background.'),
+          ('Erode (2 iterations)', 'Shrink bright regions to remove small noise artifacts.'),
+          ('Dilate (2 iterations)', 'Restore eroded regions, leaving only the main brain contour.'),
+          ('findContours → max by area', 'Detect all external contours, keep the largest one (the brain).'),
+          ('4 Extreme Points → Crop', 'extLeft, extRight, extTop, extBot define the bounding box for the final crop.'),
+          ('cv2.resize(240, 240, BICUBIC)', 'Resize cropped brain to model\'s expected input dimensions.'),
+          ('Normalize / 255.0', 'Scale pixel values from [0, 255] to [0, 1] for stable training.'),
+        ] %}
+        <div class="pipeline-step">
+          <div class="pipeline-step-num">{{ loop.index }}</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif; font-weight:700; color:var(--text-primary); font-size:0.9rem; margin-bottom:3px;">{{ title }}</div>
+            <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">{{ desc }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="col-lg-6 animate-in delay-2">
+        <div class="section-label">Training Configuration</div>
+        <h3 class="mb-3">Hyperparameters</h3>
+
+        <div class="info-grid mb-4">
+          {% for label, val in [
+            ('Optimizer', 'Adam (default lr)'),
+            ('Loss', 'Binary Cross-Entropy'),
+            ('Batch Size', '64'),
+            ('Max Epochs', '100'),
+            ('Early Stop', 'patience=5, val_loss'),
+            ('Restore Best', 'Yes'),
+            ('Image Size', '240 × 240 × 3'),
+            ('Augmentation', 'None (raw crop)'),
+          ] %}
+          <div class="info-item">
+            <div class="info-item-label">{{ label }}</div>
+            <div class="info-item-value" style="font-size:0.85rem;">{{ val }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="section-label mb-2">Dataset Split</div>
+        <div class="info-grid mb-4">
+          {% for label, val in [
+            ('Total Images', '3,000'),
+            ('Train (90%)', '2,700'),
+            ('Validation (5%)', '150'),
+            ('Test (5%)', '150'),
+            ('Tumor (yes/)', '~1,500'),
+            ('No Tumor (no/)', '~1,500'),
+          ] %}
+          <div class="info-item">
+            <div class="info-item-label">{{ label }}</div>
+            <div class="info-item-value" style="font-size:0.85rem;">{{ val }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="feature-card" style="background:rgba(46,213,115,0.05); border-color:rgba(46,213,115,0.15);">
+          <div style="font-family:'Syne',sans-serif; font-weight:700; color:var(--accent-green); margin-bottom:0.75rem;">
+            ✅ Verified Results
+          </div>
+          <div class="info-grid">
+            {% for label, val in [
+              ('Val Accuracy', '94.67%'),
+              ('Val Loss', '0.1620'),
+              ('Test Accuracy', '95.33%'),
+              ('Test Loss', '0.1430'),
+            ] %}
+            <div class="info-item" style="background:rgba(46,213,115,0.05); border-color:rgba(46,213,115,0.1);">
+              <div class="info-item-label">{{ label }}</div>
+              <div class="info-item-value" style="color:var(--accent-green);">{{ val }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Training Graphs -->
+    <div class="animate-in delay-2 mb-5">
+      <div class="section-label">Performance Graphs</div>
+      <h2 class="section-title mb-4">Training History (Real Data)</h2>
+      <div class="row g-4">
+        <div class="col-md-8">
+          <div class="feature-card p-0" style="overflow:hidden;">
+            <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-card); display:flex; justify-content:space-between; align-items:center;">
+              <div class="feature-title">Accuracy &amp; Loss — 30 Epochs</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Train (cyan) · Val (red)</div>
+            </div>
+            <div style="padding:1.25rem;">
+              <img src="{{ url_for('static', filename='images/training_history.png') }}"
+                   alt="Training History" style="max-width:100%; border-radius:var(--radius-sm);"
+                   onerror="this.parentElement.innerHTML='<p style=\'color:var(--text-muted);padding:2rem;text-align:center;\'>Run <code>python train_model.py</code> to regenerate.</p>'">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-0" style="overflow:hidden;">
+            <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-card);">
+              <div class="feature-title">Confusion Matrix (Test Set)</div>
+            </div>
+            <div style="padding:1.25rem; text-align:center;">
+              <img src="{{ url_for('static', filename='images/confusion_matrix.png') }}"
+                   alt="Confusion Matrix" style="max-width:100%; border-radius:var(--radius-sm);"
+                   onerror="this.parentElement.innerHTML='<p style=\'color:var(--text-muted);padding:2rem;\'>Run train_model.py first.</p>'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dataset + Tech Stack -->
+    <div class="row g-4 animate-in delay-3">
+      <div class="col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Dataset</div>
+          <p class="feature-desc" style="margin-bottom:0.75rem;">
+            <strong style="color:var(--text-primary);">Brain Tumor Detection (MRI)</strong> by Shivam Mahalle on Kaggle.
+            3,000 MRI images split equally between tumor (yes/) and no-tumor (no/) classes.
+          </p>
+          <a href="https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection"
+             target="_blank" style="font-size:0.82rem;">
+            View on Kaggle →
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="tech-stack-grid" style="grid-template-columns:repeat(3,1fr);">
+          {% for icon, name, desc in [
+            ('🐍','Python 3','Core language'),
+            ('🌶️','Flask','Web server'),
+            ('🧠','TensorFlow','DL framework'),
+            ('👁️','OpenCV','Contour crop'),
+            ('📐','imutils','Contour utils'),
+            ('🔢','NumPy','Array ops'),
+            ('🖼️','Pillow','Image loading'),
+            ('📊','Matplotlib','Graphs'),
+            ('🐳','Docker','Deploy'),
+          ] %}
+          <div class="tech-item">
+            <div class="tech-item-icon">{{ icon }}</div>
+            <div class="tech-item-name">{{ name }}</div>
+            <div class="tech-item-desc">{{ desc }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

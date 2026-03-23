@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}MRI Detection — NeuroScan AI{% endblock %}
+
+{% block content %}
+<section class="detect-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+
+        <!-- Header -->
+        <div class="text-center mb-4 animate-in">
+          <div class="section-label">Detection Engine</div>
+          <h1 style="font-size:2.2rem;">Upload MRI Scan</h1>
+          <p class="text-secondary mt-2">
+            Upload a brain MRI image to receive an AI-powered tumor detection result
+            with confidence score.
+          </p>
+        </div>
+
+        <!-- Error banner (server-side) -->
+        {% if error %}
+        <div class="alert-error animate-in">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Upload card -->
+        <div class="upload-card animate-in delay-2">
+
+          <form id="uploadForm" action="{{ url_for('predict') }}" method="POST" enctype="multipart/form-data">
+
+            <!-- Drop zone -->
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <div class="upload-title">Drag &amp; drop your MRI image here</div>
+              <div class="upload-subtitle mt-1">or click to browse — JPG, PNG · Max 16MB</div>
+
+              <!-- Hidden file input -->
+              <input type="file"
+                     id="fileInput"
+                     name="file"
+                     class="file-input-hidden"
+                     accept=".jpg,.jpeg,.png"
+                     required>
+            </div>
+
+            <!-- File name display -->
+            <div id="fileNameDisplay"
+                 style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--accent-cyan); text-align:center;">
+            </div>
+
+            <!-- Image preview -->
+            <div class="preview-container" id="previewContainer">
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.5rem;">
+                <i class="fas fa-eye me-1"></i> Preview
+              </p>
+              <div class="preview-image-wrap">
+                <img id="previewImg" src="" alt="MRI Preview">
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="mt-4 text-center">
+              <button type="submit" id="submitBtn" class="btn-primary-custom w-100" disabled>
+                <i class="fas fa-brain"></i>
+                Analyze MRI Scan
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Info boxes -->
+        <div class="row g-3 mt-3 animate-in delay-3">
+          <div class="col-md-4">
+            <div class="feature-card text-center py-3 px-2">
+              <div style="font-size:1.5rem; margin-bottom:0.4rem;">🔒</div>
+              <div class="feature-title" style="font-size:0.85rem;">Secure</div>
+              <p class="feature-desc" style="font-size:0.78rem;">Files processed locally, not stored</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center py-3 px-2">
+              <div style="font-size:1.5rem; margin-bottom:0.4rem;">⚡</div>
+              <div class="feature-title" style="font-size:0.85rem;">Fast</div>
+              <p class="feature-desc" style="font-size:0.78rem;">Results in under 2 seconds</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center py-3 px-2">
+              <div style="font-size:1.5rem; margin-bottom:0.4rem;">📊</div>
+              <div class="feature-title" style="font-size:0.85rem;">Detailed</div>
+              <p class="feature-desc" style="font-size:0.78rem;">Confidence score + probability</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer mt-3 animate-in delay-4">
+          <span class="disclaimer-icon"><i class="fas fa-exclamation-triangle"></i></span>
+          <div class="disclaimer-text">
+            <strong>Medical Disclaimer:</strong> This tool is for educational and research purposes only.
+            It is <strong>not</strong> a certified medical diagnostic device. Always consult a qualified
+            radiologist or physician for actual medical diagnoses.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+# Brain Tumor Detection System — Dependencies
+# Matches the Kaggle notebook environment exactly
+
+# ── Web Framework ─────────────────────────────────────────
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# ── Deep Learning ─────────────────────────────────────────
+tensorflow==2.15.0        # Use tensorflow-cpu==2.15.0 for CPU-only machines
+keras==2.15.0
+
+# ── Computer Vision (required for crop_brain_contour) ─────
+opencv-python==4.9.0.80   # cv2 — grayscale, blur, threshold, contours
+imutils==0.5.4            # imutils.grab_contours() helper
+
+# ── Image Processing ──────────────────────────────────────
+Pillow==10.2.0
+numpy==1.26.4
+
+# ── Model Evaluation / Visualization ─────────────────────
+scikit-learn==1.4.0
+matplotlib==3.8.2
+seaborn==0.13.2
+
+# ── Utilities ─────────────────────────────────────────────
+python-dotenv==1.0.1
+
+# ── Production Server ─────────────────────────────────────
+gunicorn==21.2.0          # Linux/macOS production WSGI server
+# waitress==3.0.0         # Windows alternative

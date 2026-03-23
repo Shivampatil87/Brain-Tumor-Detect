@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}NeuroScan AI — Brain Tumor Detection (95.33% Accuracy){% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ──────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center gy-5">
+
+      <div class="col-lg-6">
+        <div class="hero-badge animate-in">
+          <span class="dot"></span>
+          CNN · OpenCV Contour Crop · TensorFlow · 3000 MRI Images
+        </div>
+
+        <h1 class="hero-title animate-in delay-1">
+          <span class="line1">Detect Brain Tumors</span>
+          <span class="line2">95.33% Accuracy</span>
+        </h1>
+
+        <p class="hero-desc animate-in delay-2">
+          Upload a brain MRI scan and get instant AI-powered tumor detection.
+          Our CNN was trained on 3,000 real MRI images with OpenCV contour-based
+          preprocessing — achieving <strong style="color:var(--accent-cyan)">95.33% test accuracy</strong>
+          and <strong style="color:var(--accent-cyan)">94.67% validation accuracy</strong>.
+        </p>
+
+        <div class="hero-actions animate-in delay-3">
+          <a href="{{ url_for('detect') }}" class="btn-primary-custom">
+            <i class="fas fa-microscope"></i> Analyze MRI Scan
+          </a>
+          <a href="{{ url_for('about') }}" class="btn-secondary-custom">
+            <i class="fas fa-info-circle"></i> Model Details
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-6 hero-visual animate-in delay-4">
+        <div class="brain-scan-card">
+          <div class="scan-header">
+            <div class="scan-label">CNN Model · Trained & Verified</div>
+            <div class="scan-status"><span class="dot"></span>95.33% Test Acc</div>
+          </div>
+          <div class="scan-image-area">
+            <div class="brain-icon-demo">🧠</div>
+          </div>
+          <div class="scan-metrics">
+            <div class="metric-item">
+              <div class="metric-label">Dataset</div>
+              <div class="metric-value">3,000</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Input</div>
+              <div class="metric-value">240×240</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Test Acc</div>
+              <div class="metric-value">95.33%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Val Acc</div>
+              <div class="metric-value">94.67%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Real Stats ─────────────────────────────────────────────────────── -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-6 col-md-3 animate-in delay-1">
+        <div class="stat-number">95.33%</div>
+        <div class="stat-label">Test Accuracy</div>
+      </div>
+      <div class="col-6 col-md-3 animate-in delay-2">
+        <div class="stat-number">3,000</div>
+        <div class="stat-label">Training Images</div>
+      </div>
+      <div class="col-6 col-md-3 animate-in delay-3">
+        <div class="stat-number">11,137</div>
+        <div class="stat-label">Model Parameters</div>
+      </div>
+      <div class="col-6 col-md-3 animate-in delay-4">
+        <div class="stat-number">30</div>
+        <div class="stat-label">Epochs Trained</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Preprocessing Highlight ───────────────────────────────────────── -->
+<section class="features-section">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-7">
+        <div class="section-label">Key Innovation</div>
+        <h2 class="section-title">OpenCV Brain Contour Cropping</h2>
+        <p class="section-desc">
+          Before any pixel enters the neural network, our preprocessing pipeline
+          uses OpenCV to detect the brain's boundaries and crop away black borders —
+          dramatically improving model focus and accuracy.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4 animate-in delay-1">
+        <div class="feature-card">
+          <div class="feature-icon">🔲</div>
+          <div class="feature-title">1. Grayscale + Blur</div>
+          <p class="feature-desc">Convert to grayscale, apply Gaussian blur (5×5) to reduce noise before thresholding.</p>
+        </div>
+      </div>
+      <div class="col-md-4 animate-in delay-2">
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <div class="feature-title">2. Contour Detection</div>
+          <p class="feature-desc">Binary threshold at pixel 45 + erode/dilate, then find the largest external contour — the brain outline.</p>
+        </div>
+      </div>
+      <div class="col-md-4 animate-in delay-3">
+        <div class="feature-card">
+          <div class="feature-icon">✂️</div>
+          <div class="feature-title">3. Extreme-Point Crop</div>
+          <p class="feature-desc">Use the 4 extreme contour points (left, right, top, bottom) to crop a tight bounding box around the brain.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ───────────────────────────────────────────────────── -->
+<section class="features-section border-top-cyan" style="padding-top:4rem;">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6">
+        <div class="section-label">Pipeline</div>
+        <h2 class="section-title">From Upload to Diagnosis</h2>
+      </div>
+    </div>
+    <div class="row g-4">
+      {% for icon, title, desc in [
+        ('📤', 'Upload MRI', 'Drag & drop a JPG or PNG brain MRI scan (up to 16MB).'),
+        ('🔬', 'Contour Crop', 'OpenCV isolates the brain region, removing distracting background pixels.'),
+        ('📐', 'Resize + Normalize', 'Image resized to 240×240 and pixel values scaled to [0, 1].'),
+        ('🧠', 'CNN Inference', 'Preprocessed image fed through ZeroPad→Conv2D→BN→MaxPool×2→Dense.'),
+        ('📊', 'Sigmoid Output', 'Single neuron outputs probability 0–1. Above 0.5 = Tumor Detected.'),
+        ('✅', 'Result + Confidence', 'Label and confidence % shown with animated probability bar.'),
+      ] %}
+      <div class="col-md-6 col-lg-4 animate-in delay-{{ loop.index }}">
+        <div class="feature-card">
+          <div class="feature-icon">{{ icon }}</div>
+          <div class="feature-title">{{ loop.index }}. {{ title }}</div>
+          <p class="feature-desc">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────── -->
+<section style="padding:5rem 0; text-align:center;">
+  <div class="container">
+    <div class="hero-badge mx-auto mb-4" style="display:inline-flex;">
+      <span class="dot"></span> 95.33% Test Accuracy — Ready to analyze
+    </div>
+    <h2 class="mb-3">Try It Now</h2>
+    <p class="text-secondary mb-4" style="max-width:450px; margin:0 auto 1.5rem;">
+      Upload any brain MRI image and receive an AI prediction in seconds.
+      For research and educational use only.
+    </p>
+    <a href="{{ url_for('detect') }}" class="btn-primary-custom">
+      <i class="fas fa-upload"></i> Start Detection
+    </a>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Contact — NeuroScan AI{% endblock %}
+
+{% block content %}
+<section class="contact-section">
+  <div class="container">
+
+    <div class="row mb-5 animate-in">
+      <div class="col-lg-6">
+        <div class="section-label">Get In Touch</div>
+        <h1 style="font-size:2.4rem; margin-bottom:1rem;">Contact Us</h1>
+        <p class="text-secondary">
+          Have questions about NeuroScan AI, the model architecture, or the dataset?
+          Reach out — we'd love to hear from you.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-5">
+
+      <!-- Contact form -->
+      <div class="col-lg-7 animate-in delay-1">
+        <div class="contact-form-card">
+
+          <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:1.2rem; margin-bottom:1.5rem; color:var(--text-primary);">
+            Send a Message
+          </div>
+
+          <form id="contactForm">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label">First Name</label>
+                <input type="text"
+                       class="form-control-custom"
+                       placeholder="Shiv"
+                       required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Last Name</label>
+                <input type="text"
+                       class="form-control-custom"
+                       placeholder="Patil"
+                       required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <input type="email"
+                     class="form-control-custom"
+                     placeholder="Shivam@example.com"
+                     required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Subject</label>
+              <select class="form-control-custom">
+                <option value="">Select a topic…</option>
+                <option>Model Architecture</option>
+                <option>Dataset &amp; Training</option>
+                <option>Deployment Help</option>
+                <option>Bug Report</option>
+                <option>General Question</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Message</label>
+              <textarea class="form-control-custom"
+                        placeholder="Tell us what's on your mind…"
+                        required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary-custom w-100">
+              <i class="fas fa-paper-plane"></i>
+              Send Message
+            </button>
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Contact info -->
+      <div class="col-lg-5 animate-in delay-2">
+
+        <div class="section-label mb-3">Quick Info</div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📧</div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Email</div>
+            <div style="font-weight:500; color:var(--text-primary);">contact@neuroscanai.dev</div>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🐙</div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">GitHub</div>
+            <div style="font-weight:500; color:var(--text-primary);">github.com/neuroscanai</div>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📊</div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Dataset Source</div>
+            <div style="font-weight:500; color:var(--text-primary);">Kaggle — Brain MRI Dataset</div>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon">⏰</div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Response Time</div>
+            <div style="font-weight:500; color:var(--text-primary);">Within 48 hours</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div style="margin-top:2rem;">
+          <div class="section-label mb-3">FAQ</div>
+
+          {% set faqs = [
+            ('Is this a real medical tool?', 'No — NeuroScan AI is for research and educational purposes only. It cannot replace clinical diagnosis by a trained radiologist.'),
+            ('How accurate is the model?', 'Target accuracy is >90% on the Kaggle brain MRI dataset. Actual results depend on your training run and dataset quality.'),
+            ('Can I retrain the model?', 'Yes! Download the dataset, place it in dataset/, and run python train_model.py to train your own version.'),
+          ] %}
+
+          {% for question, answer in faqs %}
+          <details style="
+            background:var(--bg-card);
+            border:1px solid var(--border-card);
+            border-radius:var(--radius-md);
+            padding:1rem 1.25rem;
+            margin-bottom:0.75rem;
+            cursor:pointer;
+          ">
+            <summary style="
+              font-family:'Syne',sans-serif;
+              font-weight:600;
+              font-size:0.9rem;
+              color:var(--text-primary);
+              list-style:none;
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+            ">
+              {{ question }}
+              <span style="color:var(--accent-cyan);">+</span>
+            </summary>
+            <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-secondary); margin-bottom:0;">
+              {{ answer }}
+            </p>
+          </details>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

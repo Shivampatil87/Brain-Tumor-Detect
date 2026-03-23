@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}Analysis Result — NeuroScan AI{% endblock %}
+
+{% block content %}
+<section class="result-section">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4 animate-in">
+      <ol class="breadcrumb" style="font-size:0.85rem; background:none; padding:0;">
+        <li class="breadcrumb-item"><a href="{{ url_for('home') }}" style="color:var(--text-muted);">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('detect') }}" style="color:var(--text-muted);">Detection</a></li>
+        <li class="breadcrumb-item active" style="color:var(--text-secondary);">Result</li>
+      </ol>
+    </nav>
+
+    <!-- Demo mode banner -->
+    {% if result.demo_mode %}
+    <div class="demo-banner animate-in">
+      <i class="fas fa-flask"></i>
+      <strong>Demo Mode:</strong> Model not loaded — this is a simulated result.
+      Run <code>python train_model.py</code> then restart the server for real predictions.
+    </div>
+    {% endif %}
+
+    <!-- Main Result Card -->
+    <div class="result-card animate-in delay-1">
+      <div class="row g-0">
+
+        <!-- Image panel -->
+        <div class="col-md-5">
+          <div class="result-image-panel">
+            {% if image_data %}
+            <img src="{{ image_data }}" alt="Uploaded MRI Scan">
+            {% else %}
+            <div style="text-align:center; color:var(--text-muted);">
+              <div style="font-size:4rem; margin-bottom:1rem;">🧠</div>
+              <p>Image unavailable</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Data panel -->
+        <div class="col-md-7">
+          <div class="result-data-panel">
+
+            <!-- Result badge -->
+            <div class="result-badge {{ 'tumor' if result.has_tumor else 'no-tumor' }}">
+              {% if result.has_tumor %}
+              <i class="fas fa-exclamation-circle"></i> Tumor Detected
+              {% else %}
+              <i class="fas fa-check-circle"></i> No Tumor Detected
+              {% endif %}
+            </div>
+
+            <h2 style="font-size:1.6rem; margin-bottom:0.4rem;">{{ result.label }}</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">
+              CNN prediction · OpenCV preprocessed · 240×240 input · Sigmoid output
+            </p>
+
+            <!-- Primary confidence -->
+            <div class="confidence-label">
+              {{ 'Tumor Probability' if result.has_tumor else 'No-Tumor Probability' }}
+            </div>
+            <div class="confidence-value {{ 'high' if result.has_tumor else 'low' }}">
+              {{ result.confidence }}%
+            </div>
+            <div class="confidence-bar-wrap mt-2 mb-1">
+              <div class="confidence-bar {{ 'tumor' if result.has_tumor else 'no-tumor' }}"
+                   style="width:0%" data-width="{{ result.confidence }}"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:1.5rem;">
+              <span>0%</span><span>100%</span>
+            </div>
+
+            <!-- Dual probability bars -->
+            <div style="margin-bottom:1.5rem;">
+              <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">
+                Full Probability Breakdown
+              </div>
+
+              <!-- Tumor bar -->
+              <div style="margin-bottom:0.6rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+                  <span style="color:var(--accent-red); font-weight:500;">🔴 Tumor</span>
+                  <span style="color:var(--text-primary); font-weight:600;">{{ result.prob_tumor }}%</span>
+                </div>
+                <div class="confidence-bar-wrap" style="height:6px;">
+                  <div class="confidence-bar tumor" style="width:0%" data-width="{{ result.prob_tumor }}" id="barTumor"></div>
+                </div>
+              </div>
+
+              <!-- No tumor bar -->
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+                  <span style="color:var(--accent-green); font-weight:500;">🟢 No Tumor</span>
+                  <span style="color:var(--text-primary); font-weight:600;">{{ result.prob_no_tumor }}%</span>
+                </div>
+                <div class="confidence-bar-wrap" style="height:6px;">
+                  <div class="confidence-bar no-tumor" style="width:0%" data-width="{{ result.prob_no_tumor }}" id="barNoTumor"></div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="result-divider">
+
+            <!-- Info grid -->
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-item-label">Diagnosis</div>
+                <div class="info-item-value {{ 'text-red' if result.has_tumor else 'text-green' }}">
+                  {{ result.label }}
+                </div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">Confidence</div>
+                <div class="info-item-value">{{ result.confidence }}%</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">Model Accuracy</div>
+                <div class="info-item-value text-cyan">95.33%</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">Input Size</div>
+                <div class="info-item-value">240 × 240</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">Preprocessing</div>
+                <div class="info-item-value" style="font-size:0.8rem;">OpenCV Contour Crop</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">Model Params</div>
+                <div class="info-item-value">11,137</div>
+              </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+              <span class="disclaimer-icon"><i class="fas fa-exclamation-triangle"></i></span>
+              <div class="disclaimer-text">
+                AI-generated result for <strong>research &amp; education only</strong>.
+                Not a medical diagnostic tool. Always consult a licensed radiologist.
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+              <a href="{{ url_for('detect') }}" class="btn-primary-custom">
+                <i class="fas fa-redo"></i> Analyze Another
+              </a>
+              <a href="{{ url_for('about') }}" class="btn-secondary-custom">
+                <i class="fas fa-chart-line"></i> Model Details
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real Training Graphs -->
+    <div class="row mt-5 g-4 animate-in delay-3">
+      <div class="col-12">
+        <div class="section-label">Verified Model Performance</div>
+        <h3 style="font-size:1.4rem; margin-bottom:0.5rem;">Real Training Results</h3>
+        <p class="text-secondary" style="font-size:0.88rem; margin-bottom:1.5rem;">
+          Trained on 3,000 brain MRI images · 30 epochs · Val 94.67% · Test 95.33%
+        </p>
+      </div>
+
+      <div class="col-md-8">
+        <div class="feature-card p-0" style="overflow:hidden;">
+          <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-card); display:flex; justify-content:space-between; align-items:center;">
+            <div class="feature-title">Accuracy &amp; Loss Curves (30 Epochs)</div>
+            <div style="font-size:0.75rem; color:var(--accent-green);">● 95.33% Test Acc</div>
+          </div>
+          <div style="padding:1.25rem;">
+            <img src="{{ url_for('static', filename='images/training_history.png') }}"
+                 alt="Training History"
+                 style="max-width:100%; border-radius:var(--radius-sm);"
+                 onerror="this.parentElement.innerHTML='<p style=\'color:var(--text-muted);padding:1.5rem;text-align:center;\'>Run <code>python train_model.py</code> to generate graphs.</p>'">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card p-0" style="overflow:hidden; height:100%;">
+          <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-card);">
+            <div class="feature-title">Confusion Matrix</div>
+          </div>
+          <div style="padding:1.25rem; text-align:center;">
+            <img src="{{ url_for('static', filename='images/confusion_matrix.png') }}"
+                 alt="Confusion Matrix"
+                 style="max-width:100%; border-radius:var(--radius-sm);"
+                 onerror="this.parentElement.innerHTML='<p style=\'color:var(--text-muted);padding:1.5rem;\'>Run train_model.py first.</p>'">
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics summary row -->
+      <div class="col-12">
+        <div class="feature-card">
+          <div class="row g-4 text-center">
+            {% for label, val, color in [
+              ('Test Accuracy',   '95.33%', 'var(--accent-cyan)'),
+              ('Val Accuracy',    '94.67%', 'var(--accent-cyan)'),
+              ('Test Loss',       '0.1430', 'var(--accent-green)'),
+              ('Val Loss',        '0.1620', 'var(--accent-green)'),
+              ('Train Samples',   '2,700',  'var(--text-primary)'),
+              ('Model Params',    '11,137', 'var(--text-primary)'),
+            ] %}
+            <div class="col-6 col-md-2">
+              <div style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; color:{{ color }}; line-height:1;">{{ val }}</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px;">{{ label }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  window.addEventListener('load', () => {
+    // Animate all confidence bars
+    document.querySelectorAll('.confidence-bar').forEach(bar => {
+      const target = bar.dataset.width;
+      setTimeout(() => { bar.style.width = target + '%'; }, 400);
+    });
+  });
+</script>
+{% endblock %}
