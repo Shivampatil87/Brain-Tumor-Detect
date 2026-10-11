@@ -4,9 +4,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     FLASK_ENV=production
 
-RUN apt-get update && apt-get install -y \
-    gcc libglib2.0-0 libsm6 libxext6 libxrender-dev \
-    libgomp1 libgl1-mesa-glx \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
