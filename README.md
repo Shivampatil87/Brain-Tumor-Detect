@@ -1,45 +1,75 @@
-# 🧠 NeuroScan AI: Brain Tumor Detection System
+# 🧠 NeuroScan AI | Brain Tumor Detection System
 
-An AI-powered brain tumor detection web application built with **Python, Flask, TensorFlow/Keras, and OpenCV**. NeuroScan AI uses a Convolutional Neural Network (CNN) to classify brain MRI images into two categories: tumor detected and no tumor detected.
+<p align="center">
+  <strong>AI-powered Brain MRI Classification using Deep Learning</strong>
+</p>
 
-> **Disclaimer:** This project is intended for educational and research purposes only. It is not a certified medical diagnostic device and must not be used as a substitute for professional medical advice or radiological assessment.
+<p align="center">
+  <a href="https://brain-tumor-detect-eef3.onrender.com/">
+    <img src="https://img.shields.io/badge/Live%20Demo-Open%20App-16a34a?style=for-the-badge" alt="Live Demo"/>
+  </a>
+  <a href="https://github.com/Shivampatil87/Brain-Tumor-Detect">
+    <img src="https://img.shields.io/badge/GitHub-Source%20Code-181717?style=for-the-badge&logo=github" alt="GitHub Repository"/>
+  </a>
+</p>
+
+NeuroScan AI is a web-based brain tumor classification project built with **Python, Flask, TensorFlow/Keras, and OpenCV**. It processes uploaded brain MRI images and uses a Convolutional Neural Network (CNN) to classify them into tumor and no-tumor categories.
+
+🚀 **Live Application:** https://brain-tumor-detect-eef3.onrender.com/
+
+> **Medical Disclaimer:** This project is intended for educational and research purposes only. It is not a clinically validated diagnostic device. Predictions must not be used to diagnose or rule out a brain tumor or guide medical treatment.
 
 ## ✨ Features
 
-- 🧠 **CNN-Based Classification:** Predicts whether an MRI image belongs to the tumor or no-tumor class.
-- 📊 **Model Performance:** Reported test accuracy of 95.33% and validation accuracy of 94.67%, subject to verification against the original experiment.
-- 🖼️ **MRI Image Upload:** Upload brain MRI images for analysis.
-- 🔬 **Image Preprocessing:** Uses OpenCV-based brain contour cropping and image resizing.
-- 📈 **Prediction Results:** Displays the predicted class and confidence scores.
-- 🌐 **Flask Web Application:** Provides a browser-based interface for image analysis.
-- 🔌 **JSON Prediction API:** Supports predictions through an HTTP endpoint.
-- 🐳 **Docker Support:** Includes container-based deployment configuration.
-- 📱 **Responsive Interface:** Designed for convenient use across desktop and mobile screens.
+- 🧠 **Deep Learning Classification:** CNN-based classification of brain MRI images.
+- 🖼️ **MRI Image Upload:** Upload supported JPG and PNG images through the web interface.
+- 🔬 **OpenCV Preprocessing:** Brain contour detection and cropping to reduce distracting background regions.
+- 📊 **Prediction Results:** Displays the predicted category and associated confidence information.
+- 🌐 **Flask Web Application:** Interactive browser-based interface.
+- 📱 **Responsive UI:** Designed for a convenient user experience.
+- 🐳 **Docker Support:** Containerized deployment configuration.
+- ☁️ **Cloud Deployment:** Hosted online using Render.
 
-## 🛠️ Tech Stack
+## 🌐 Live Demo
 
-| Component | Technologies |
+**Try the application:** [NeuroScan AI - Brain Tumor Detection](https://brain-tumor-detect-eef3.onrender.com/)
+
+1. Open the live website.
+2. Navigate to the MRI detection page.
+3. Upload a supported brain MRI image.
+4. Submit the image for processing.
+5. Review the application's predicted category and displayed confidence.
+
+The results are model predictions, not medical diagnoses. Availability and response time may vary depending on hosting resources.
+
+## 🛠️ Technology Stack
+
+| Category | Technologies |
 |---|---|
-| Programming Language | Python |
-| Web Framework | Flask |
+| Language | Python |
+| Backend | Flask |
 | Deep Learning | TensorFlow, Keras |
 | Image Processing | OpenCV, NumPy, imutils |
-| Frontend | HTML, CSS, JavaScript |
-| Model Format | Keras `.h5` |
-| API | REST API, JSON |
-| Deployment | Docker |
+| Frontend | HTML5, CSS3, JavaScript |
+| Model Format | Keras HDF5 (`.h5`) |
+| Containerization | Docker |
+| Hosting | Render |
+| Version Control | Git, GitHub |
 
 ## 📁 Project Structure
 
 ```text
-Brain_Tumor/
+Brain-Tumor-Detect/
 ├── app.py
 ├── train_model.py
 ├── requirements.txt
 ├── Dockerfile
 ├── README.md
+├── .gitignore
+│
 ├── model/
 │   └── brain_tumor_model.h5
+│
 ├── static/
 │   ├── css/
 │   │   └── style.css
@@ -48,6 +78,7 @@ Brain_Tumor/
 │   └── images/
 │       ├── training_history.png
 │       └── confusion_matrix.png
+│
 ├── templates/
 │   ├── base.html
 │   ├── home.html
@@ -55,21 +86,20 @@ Brain_Tumor/
 │   ├── result.html
 │   ├── about.html
 │   └── contact.html
+│
 ├── uploads/
 └── dataset/
     ├── yes/
     └── no/
 ```
 
-*Note: This is the intended structure. Keep only the files and folders that actually exist in your repository. The `dataset/`, `model/`, and generated graph files may be absent until you add the dataset or train the model.*
+*The structure above describes the intended project layout. Some folders, generated graphs, or the dataset may not be present in a fresh clone. Keep private MRI uploads and sensitive patient data out of the public repository.*
 
-## ⚙️ Installation and Setup
+## ⚙️ Run the Project Locally
 
 ### Prerequisites
 
-Install the following before proceeding:
-
-- Python 3.10 or another Python version supported by your TensorFlow release
+- Python 3.11, compatible with the supplied Docker base image and installed dependencies
 - pip
 - Git
 - Optional: Docker
@@ -77,26 +107,20 @@ Install the following before proceeding:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Shivampatil87/Brain_Tumor.git
-cd Brain_Tumor
+git clone https://github.com/Shivampatil87/Brain-Tumor-Detect.git
+cd Brain-Tumor-Detect
 ```
 
 ### 2. Create a virtual environment
 
-**Windows PowerShell:**
+**Windows PowerShell**
 
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks activation, you can install packages using the environment's Python directly:
-
-```powershell
-.\venv\Scripts\python.exe -m pip install --upgrade pip
-```
-
-**macOS/Linux:**
+**macOS/Linux**
 
 ```bash
 python3 -m venv venv
@@ -110,15 +134,15 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-For a CPU-only installation, use a TensorFlow version compatible with your Python version and platform. If you change the TensorFlow package, update `requirements.txt` accordingly.
+If installation fails, check the Python version and the compatibility of the TensorFlow and OpenCV packages specified in `requirements.txt`.
 
 ### 4. Prepare the dataset
 
 Download the dataset from Kaggle:
 
-**[Brain Tumor Detection Dataset](https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection)**
+[Brain Tumor Detection Dataset - Kaggle](https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection)
 
-Arrange the images according to the directory structure expected by `train_model.py`. For example:
+Arrange the dataset as expected by the training script:
 
 ```text
 dataset/
@@ -130,7 +154,7 @@ dataset/
     └── normal_image_2.jpg
 ```
 
-The `yes` and `no` directory names must match the labels expected by the training script. Confirm the actual number of usable images and the train, validation, and test split before reporting dataset statistics.
+The folder names and labels must match the implementation in `train_model.py`.
 
 ### 5. Train the model
 
@@ -140,9 +164,9 @@ If the trained model is not already available, run:
 python train_model.py
 ```
 
-The script should train the CNN and save the model and evaluation plots if those operations are implemented in the script.
+The script should save the trained model and evaluation plots if those output operations are implemented.
 
-Expected output paths, if configured:
+Expected output paths:
 
 ```text
 model/brain_tumor_model.h5
@@ -150,36 +174,33 @@ static/images/training_history.png
 static/images/confusion_matrix.png
 ```
 
-Training time depends on the processor, GPU, dataset, and TensorFlow configuration.
+Training time depends on the hardware, dependency versions, dataset and configuration.
 
-**Important:** The accuracy values shown in this README are reported results, not guaranteed outcomes. Your results may vary when training again because of random initialization, data splitting, preprocessing, or library versions.
+**Note:** Retraining may produce different results. The reported metrics below should be verified against the original notebook or evaluation logs.
 
-### 6. Run the Flask application
+### 6. Start the application
 
 ```bash
 python app.py
 ```
 
-Open the following URL in your browser:
+Open your browser at:
 
-**http://127.0.0.1:5000**
+http://127.0.0.1:5000/
 
-Upload a supported brain MRI image and review the prediction returned by the application.
+Upload an MRI image and test the application's prediction workflow.
 
-If the model file is missing, the application will only run in demo mode if that behaviour has actually been implemented in `app.py`. Demo predictions must never be interpreted as real model results.
+## 🧠 CNN Model Architecture
 
-## 🧠 Model Architecture
-
-The CNN architecture described in the training notebook uses an input image size of `240 × 240 × 3`.
+The model uses an input image size of `240 × 240 × 3` and a binary output.
 
 ```text
 Input Image (240 × 240 × 3)
           |
-     Zero Padding
+      Zero Padding
           |
-   Convolution Layer
-       32 filters
-        7 × 7
+   Conv2D (32 filters)
+       Kernel 7 × 7
           |
  Batch Normalization
           |
@@ -191,91 +212,45 @@ Input Image (240 × 240 × 3)
           |
         Flatten
           |
-    Dense Layer (1)
+     Dense (1 neuron)
           |
-    Sigmoid Activation
+   Sigmoid Activation
           |
-  Binary Classification
+ Binary Classification
 ```
 
-| Layer | Purpose |
-|---|---|
-| Input | Accepts a resized MRI image |
-| ZeroPadding2D | Adds padding around the image |
-| Conv2D | Extracts image features |
-| BatchNormalization | Normalizes intermediate activations |
-| ReLU | Introduces non-linearity |
-| MaxPooling2D | Reduces spatial dimensions |
-| Flatten | Converts feature maps into a vector |
-| Dense | Produces a binary output |
-| Sigmoid | Produces a score between 0 and 1 |
+The reported model has approximately **11,137 parameters**. Verify the exact layer configuration and parameter count using `model.summary()`.
 
-The notebook reports approximately **11,137 total parameters**. Confirm the exact parameter count and layer configuration using the trained model's `model.summary()` output.
+### Image preprocessing
 
-## 🔬 Image Preprocessing
+The preprocessing pipeline uses OpenCV-based brain contour cropping.
 
-The training and inference pipelines should apply compatible preprocessing to MRI images before classification.
-
-The described contour-cropping procedure uses OpenCV to:
-
-1. Convert the image to grayscale.
-2. Apply Gaussian blur.
+1. Convert the MRI image to grayscale.
+2. Apply Gaussian blur to reduce noise.
 3. Apply binary thresholding.
-4. Remove noise using erosion and dilation.
-5. Find the largest external contour.
+4. Perform erosion and dilation.
+5. Detect external contours and select the largest contour.
 6. Crop the image using the contour's extreme points.
 7. Resize and normalize the image to the model's expected input format.
 
-Training and inference must use the same preprocessing rules, input dimensions, colour-channel order, and normalization. Empty contours and invalid images should also be handled safely.
+Training and inference should use the same preprocessing, colour-channel order, dimensions and normalization.
 
-## 📊 Model Performance
+## 📊 Reported Model Performance
 
-The following metrics are reported by the original notebook and should be verified against its evaluation output.
+The following metrics were reported by the training notebook. They should not be interpreted as independently verified clinical performance.
 
-| Dataset Split | Samples | Reported Accuracy | Reported Loss |
+| Dataset Split | Samples | Accuracy | Loss |
 |---|---:|---:|---:|
 | Training | 2,700 | 98.59% | 0.0548 |
 | Validation | 150 | 94.67% | 0.1620 |
 | Test | 150 | 95.33% | 0.1430 |
 | **Total** | **3,000** | — | — |
 
-Accuracy alone does not establish clinical reliability. For a medical imaging classifier, evaluate sensitivity, specificity, precision, recall, the confusion matrix, and performance on independent data. Ensure there is no patient-level data leakage between the training and test sets.
-
-## 🔌 JSON Prediction API
-
-The application may expose a prediction endpoint at:
-
-```text
-POST /api/predict
-```
-
-Send an MRI image using multipart form data:
-
-```bash
-curl -X POST http://127.0.0.1:5000/api/predict \
-  -F "file=@mri_scan.jpg"
-```
-
-A successful response may follow this format if implemented by `app.py`:
-
-```json
-{
-  "label": "Tumor Detected",
-  "confidence": 94.28,
-  "prob_tumor": 94.28,
-  "prob_no_tumor": 5.72,
-  "has_tumor": true,
-  "demo_mode": false
-}
-```
-
-The values above are illustrative. Actual predictions depend on the uploaded image and the loaded model.
-
-Check `app.py` for the exact route, required form field, response schema, and error handling before relying on this example.
+**Evaluation note:** Accuracy alone does not establish medical reliability. Further evaluation should include sensitivity, specificity, precision, recall, confusion-matrix analysis and testing on independent data. Dataset splitting should also prevent patient-level data leakage.
 
 ## 🐳 Docker Deployment
 
-Build the Docker image from the directory containing the `Dockerfile`:
+Build the image from the project root:
 
 ```bash
 docker build -t neuroscan-ai .
@@ -289,46 +264,63 @@ docker run --rm -p 5000:5000 neuroscan-ai
 
 Open:
 
-http://127.0.0.1:5000
+http://127.0.0.1:5000/
 
-Ensure that the Docker image includes the required Python dependencies and that the model file is available inside the container or mounted at the expected path. Do not expose Flask's development server directly to production traffic; use an appropriate production WSGI server and deployment configuration.
+The Docker image must contain the required dependencies and make the trained model available at the path expected by `app.py`. Use a production WSGI server and appropriate security settings for a deployed application.
+
+## ☁️ Deployment on Render
+
+This project is deployed on Render.
+
+**Live URL:** https://brain-tumor-detect-eef3.onrender.com/
+
+To deploy your own instance:
+
+1. Push the project to a GitHub repository.
+2. Connect the repository to Render.
+3. Configure the service to build using the repository's `Dockerfile`.
+4. Ensure that the model file and Python dependencies are available.
+5. Review the build and runtime logs.
+6. Test image upload and prediction after deployment.
+
+For deployment configuration and service options, refer to the [Render documentation](https://render.com/docs).
 
 ## 🔒 Security and Privacy
 
-- Validate uploaded file types and file sizes.
-- Generate safe server-side filenames instead of trusting user-provided filenames.
-- Prevent uploaded files from being served or executed as application code.
-- Delete temporary MRI uploads when they are no longer needed.
-- Do not commit private patient scans, identifying information, credentials, or secret keys to GitHub.
-- Configure upload directories and model paths carefully when deploying with Docker.
-- Use a production server, secure configuration, and appropriate access controls before deployment.
+- Validate uploaded image formats and file sizes.
+- Use safe server-generated filenames.
+- Remove temporary uploaded images when no longer required.
+- Never commit identifiable patient scans, private data, API keys or credentials.
+- Keep environment-specific settings outside source control.
+- Use appropriate production server settings and access controls.
 
 ## ⚠️ Medical Disclaimer
 
-NeuroScan AI is a student research and educational project. It has not been established as a clinically validated or certified medical device.
+NeuroScan AI is a student project intended for learning and research in medical image classification.
 
-Predictions may be incorrect, and reported confidence scores are not necessarily calibrated probabilities. Do not use this application to diagnose, rule out, or make treatment decisions about brain tumors. Clinical decisions must be made by qualified healthcare professionals using appropriate medical evaluation.
+The model may produce incorrect predictions. Displayed confidence values are not necessarily calibrated probabilities and must not be treated as the likelihood that a patient has a tumor.
+
+**Do not use this application for clinical diagnosis, treatment decisions, or to rule out a brain tumor.** Consult qualified healthcare professionals for medical assessment.
 
 ## 🚀 Future Improvements
 
-- Add patient-level dataset splitting and external validation.
-- Improve error handling for invalid or unsupported MRI images.
-- Add sensitivity, specificity, precision, recall, and ROC-AUC reporting.
-- Introduce automated tests for preprocessing, prediction, and API endpoints.
-- Improve inference speed and memory usage.
-- Add secure deployment and monitoring.
-- Evaluate model robustness across MRI scanners, imaging protocols, and patient populations.
+- Evaluate sensitivity, specificity, precision, recall and ROC-AUC.
+- Improve handling of invalid, corrupted or unsupported images.
+- Add automated tests for preprocessing and prediction.
+- Evaluate the model on independent datasets.
+- Improve model robustness across scanners and imaging protocols.
+- Strengthen upload validation, privacy controls and deployment monitoring.
 
 ## 👨‍💻 Author
 
 **Shivam Mahalle**
 
-GitHub: [@Shivampatil87](https://github.com/Shivampatil87)
-
-Project repository: [Brain_Tumor](https://github.com/Shivampatil87/Brain_Tumor)
+- GitHub: [@Shivampatil87](https://github.com/Shivampatil87)
+- Repository: [Brain-Tumor-Detect](https://github.com/Shivampatil87/Brain-Tumor-Detect)
+- Live Demo: [NeuroScan AI](https://brain-tumor-detect-eef3.onrender.com/)
 
 ---
 
-⭐ If you find this project useful for learning about computer vision and deep learning, consider starring the repository.
+⭐ If you find this project useful for learning about deep learning and computer vision, consider starring the repository.
 
-**Built for learning, experimentation, and research in medical image classification.**
+**Built for educational research in AI-assisted medical image classification.**
